@@ -16,7 +16,7 @@ const Navbar = () => {
           <a href="#home" style={{ fontSize: '15px', fontWeight: 500, transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color='var(--accent-cyan)'} onMouseOut={e => e.target.style.color='inherit'}>Home</a>
           <a href="#verify" style={{ fontSize: '15px', fontWeight: 500, transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color='var(--accent-cyan)'} onMouseOut={e => e.target.style.color='inherit'}>Verify</a>
           <a href="#report" style={{ fontSize: '15px', fontWeight: 500, transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color='var(--accent-crimson)'} onMouseOut={e => e.target.style.color='inherit'}>Report Fraud</a>
-          <button className="btn-primary" style={{ padding: '8px 20px', fontSize: '14px' }}>
+          <button className="btn-primary" style={{ padding: '8px 20px', fontSize: '14px' }} onClick={() => document.getElementById('home').scrollIntoView({ behavior: 'smooth' })}>
             <Search size={16} /> Get Started
           </button>
         </div>
