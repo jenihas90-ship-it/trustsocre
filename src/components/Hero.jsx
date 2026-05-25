@@ -4,6 +4,7 @@ import { Search, ShieldAlert, CheckCircle, XCircle } from 'lucide-react';
 const Hero = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState(null);
+  const [reports, setReports] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -13,6 +14,7 @@ const Hero = () => {
     setLoading(true);
     setError('');
     setResults(null);
+    setReports(null);
 
     try {
       const response = await fetch(`/api/verify?query=${encodeURIComponent(query)}`);
@@ -21,6 +23,7 @@ const Hero = () => {
       if (!response.ok) throw new Error(data.error || 'Failed to verify');
       
       setResults(data.results);
+      setReports(data.reports);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -65,12 +68,24 @@ const Hero = () => {
         </div>
 
         {/* Results Section */}
-        {(results || error) && (
+        {(results || reports || error) && (
           <div className="animate-fade-in glass-panel" style={{ marginTop: '24px', padding: '24px', maxWidth: '600px', margin: '24px auto 0 auto', textAlign: 'left' }}>
             {error && <div style={{ color: 'var(--accent-crimson)', display: 'flex', alignItems: 'center', gap: '8px' }}><XCircle size={20} /> {error}</div>}
             
-            {results && results.length === 0 && (
-              <div style={{ color: 'var(--text-muted)' }}>No records found for "{query}". Please exercise caution.</div>
+            {reports && reports.length > 0 && (
+              <div style={{ background: 'rgba(255, 42, 95, 0.1)', border: '1px solid var(--accent-crimson)', padding: '16px', borderRadius: '12px', marginBottom: '16px' }}>
+                <h4 style={{ color: 'var(--accent-crimson)', display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 8px 0' }}><ShieldAlert size={20} /> WARNING: Fraud Reports Found</h4>
+                <p style={{ margin: 0, fontSize: '14px', color: 'var(--text-main)' }}>There are {reports.length} report(s) matching your search term.</p>
+                <ul style={{ marginTop: '8px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-muted)' }}>
+                  {reports.map((r, i) => (
+                    <li key={i}>{r.description} (Reported against: {r.business_identifier})</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {results && results.length === 0 && (!reports || reports.length === 0) && (
+              <div style={{ color: 'var(--text-muted)' }}>No official business records or reports found for "{query}". Please exercise caution.</div>
             )}
 
             {results && results.length > 0 && (

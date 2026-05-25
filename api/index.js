@@ -13,7 +13,9 @@ let businesses = [
   { id: 3, name: "Safeway Logistics", identifier: "TIN987654", trust_score: 82, status: "Good", verified: true }
 ];
 
-let reports = [];
+let reports = [
+  { id: 1, business_identifier: "forex trading", description: "Known cryptocurrency scam asking for deposits via Telegram.", created_at: new Date() }
+];
 
 // Verify Endpoint
 app.get('/api/verify', (req, res) => {
@@ -25,8 +27,10 @@ app.get('/api/verify', (req, res) => {
 
   const q = query.toLowerCase();
   const results = businesses.filter(b => b.name.toLowerCase().includes(q) || b.identifier.toLowerCase() === q);
+  
+  const queryReports = reports.filter(r => r.business_identifier.toLowerCase().includes(q) || r.description.toLowerCase().includes(q));
 
-  res.json({ results });
+  res.json({ results, reports: queryReports });
 });
 
 // Report Endpoint
